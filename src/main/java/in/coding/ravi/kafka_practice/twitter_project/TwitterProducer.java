@@ -36,10 +36,10 @@ public class TwitterProducer {
 
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class);
 
-	String consumerKey = "kQFassXWNxgOZ3tr3h5ghFAbx";
-	String consumerSecretKey = "9z47adzFfuETYqbNWUqv5qYhl0kEMm6Xzz1hT4K56c0KgrO6Qx";
-	String accessToken = "110235292-TMSSV1Ioues1YSyIEZFdmLhiMBgOcl6yPCGdUInt";
-	String accessSecretToken = "mCcH9Cj3eUNI9AdV74knNPYjqrrXYX2kSI4LAlZLADC8K";
+	String consumerKey = "";
+	String consumerSecretKey = "";
+	String accessToken = "";
+	String accessSecretToken = "";
 	String bootStrapServer = "127.0.0.1:9092";
 
 	public static void main(String[] args) {
@@ -114,7 +114,7 @@ public class TwitterProducer {
 		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
 		StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 
-		List<String> terms = Lists.newArrayList("kafka");
+		List<String> terms = Lists.newArrayList("Kashmir");
 
 		hosebirdEndpoint.trackTerms(terms);
 
@@ -136,6 +136,17 @@ public class TwitterProducer {
 		properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServer);
 		properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 		properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+		// define properties for a safe producer
+		properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+		properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+		properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
+		properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5"); // kafka 2.0 >= 1.1 so we can keep this as 5. Use 1 otherwise.
+		
+		//define properties for high throughput producer (at some cost of latency and CPU cycles)
+		properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+		properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+		properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024));
 
 		// create Producer
 		KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
