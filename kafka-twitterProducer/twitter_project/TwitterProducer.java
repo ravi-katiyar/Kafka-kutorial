@@ -36,10 +36,10 @@ public class TwitterProducer {
 
 	Logger logger = LoggerFactory.getLogger(TwitterProducer.class);
 
-	String consumerKey = "";
-	String consumerSecretKey = "";
-	String accessToken = "";
-	String accessSecretToken = "";
+	String consumerKey = "bMGyh10vgYPUeP2yX5HDSa9fX";
+	String consumerSecretKey = "olP3VUZ58Kwop7F1izpHLKk2XBayvOyWVq1Jy0R3SE4eZqPmeU";
+	String accessToken = "110235292-o6QkTMYbrf6RenxNBeqg3NzBYO8VOtDqvb65Hr2H";
+	String accessSecretToken = "2psUhiiVeO6hURtU02SheJTeR9O1toWgZvR9ruaYMbmbg";
 	String bootStrapServer = "127.0.0.1:9092";
 
 	public static void main(String[] args) {
